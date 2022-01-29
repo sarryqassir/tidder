@@ -6,6 +6,7 @@ import {
   InputType,
   Mutation,
   ObjectType,
+  Query,
   Resolver,
 } from "type-graphql";
 import { User } from "../entities/User";
@@ -42,10 +43,22 @@ const minPasswordLength = 3;
 
 @Resolver()
 export class UserResolver {
+  // !Can't test this rn with graphql not running on localhost
+  @Query(() => User, { nullable: true })
+  async me(@Ctx() { req, em }: MyContext) {
+    // you are not logged in
+    if (!req.session.userId) {
+      return null;
+    }
+
+    const user = await em.findOne(User, { id: req.session.userId });
+    return user;
+  }
+
   @Mutation(() => UserResponse)
   async register(
     @Arg("options", () => UsernamePasswordInput) options: UsernamePasswordInput,
-    @Ctx() { em }: MyContext
+    @Ctx() { em, req }: MyContext
   ): Promise<UserResponse> {
     // TODO: use a validation library
     if (options.username.length < minUsernameLength) {
@@ -90,13 +103,18 @@ export class UserResolver {
         };
       }
     }
+    // store user id session
+    // sets a cookie on the user
+    // keeps them logged in
+    req.session.userId = user.id;
+
     return { user };
   }
 
   @Mutation(() => UserResponse)
   async login(
     @Arg("options", () => UsernamePasswordInput) options: UsernamePasswordInput,
-    @Ctx() { em }: MyContext
+    @Ctx() { em, req }: MyContext
   ): Promise<UserResponse> {
     const user = await em.findOne(User, { username: options.username });
     if (!user) {
@@ -120,6 +138,11 @@ export class UserResolver {
         ],
       };
     }
+
+    // can add values that probably won't change to session
+    // userid is stored to lookup user, which has data that can change
+    req.session.userId = user.id;
+
     return { user };
   }
 }
