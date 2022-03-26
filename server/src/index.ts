@@ -12,7 +12,6 @@ import mikroConfig from "./mikro-orm.config";
 import { HelloResolver } from "./resolvers/hello";
 import { PostResolver } from "./resolvers/post";
 import { UserResolver } from "./resolvers/user";
-import { MyContext } from "./types";
 
 const main = async () => {
   const orm = await MikroORM.init(mikroConfig);
@@ -24,7 +23,7 @@ const main = async () => {
   const redisClient = redis.createClient();
   app.use(
     cors({
-      origin: "https://localhost:3000",
+      origin: "http://localhost:3000",
       credentials: true,
     })
   );
@@ -53,10 +52,10 @@ const main = async () => {
       resolvers: [HelloResolver, PostResolver, UserResolver],
       validate: false,
     }),
-    context: ({ req, res }): MyContext => ({ em: orm.em, req, res }),
+    context: ({ req, res }) => ({ em: orm.em, req, res }),
   });
 
-  await apolloServer.start();
+  // await apolloServer.start();
   apolloServer.applyMiddleware({
     app,
     cors: false,

@@ -30,7 +30,7 @@
     "@mikro-orm/core": "^4.5.10",
     "@mikro-orm/migrations": "^4.5.10",
     "@mikro-orm/postgresql": "^4.5.10",
-    "apollo-server-express": "^3.6.2",
+    "apollo-server-express": "2.16.1",
     "argon2": "^0.28.3",
     "connect-redis": "^6.0.0",
     "cors": "^2.8.5",
