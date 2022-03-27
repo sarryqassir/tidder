@@ -1,10 +1,11 @@
 import React from "react";
+import { NavBar } from "../components/NavBar";
 
 const Index = () => (
-  // <React.StrictMode>
-  //   <MyApp Component={undefined} pageProps={undefined} />
-  // </React.StrictMode>
-  <div>hello world</div>
+  <React.StrictMode>
+    <NavBar />
+    <div>hello world</div>
+  </React.StrictMode>
 );
 
 export default Index;
