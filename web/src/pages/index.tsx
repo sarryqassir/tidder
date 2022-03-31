@@ -6,7 +6,11 @@ import { Layout } from "../components/Layout";
 import { usePostsQuery } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 const Index = () => {
-  const [{ data }] = usePostsQuery();
+  const [{ data }] = usePostsQuery({
+    variables: {
+      limit: 10,
+    },
+  });
   return (
     <React.StrictMode>
       <Layout>
